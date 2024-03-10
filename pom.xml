@@ -1,0 +1,133 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.example</groupId>
+  <artifactId>FirstSeleniumScript</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>FirstSeleniumScript</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <!--   Encoding     -->
+    <encoding.type>UTF-8</encoding.type>
+    <project.build.sourceEncoding>${encoding.type}</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>${encoding.type}</project.reporting.outputEncoding>
+    <file.encoding>${encoding.type}</file.encoding>
+
+    <!--   Java version     -->
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+
+    <!--    Dependencies version    -->
+    <maven-compiler-plugin>3.6.1</maven-compiler-plugin>
+    <maven-surefire-plugin>3.0.0-M5</maven-surefire-plugin>
+    <aspectj.version>1.9.19</aspectj.version>
+    <junit-jupiter-engine>5.10.0</junit-jupiter-engine>
+    <allure-junit5>2.16.1</allure-junit5>
+    <allure-maven>2.10.0</allure-maven>
+    <slf4j-simple>1.7.30</slf4j-simple>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-java</artifactId>
+      <version>4.10.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjweaver</artifactId>
+      <version>${aspectj.version}</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>${slf4j-simple}</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.10.0</version>
+    </dependency>
+    <dependency>
+      <groupId>io.qameta.allure</groupId>
+      <artifactId>allure-junit5</artifactId>
+      <version>${allure-junit5}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven-compiler-plugin}</version>
+        <configuration>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
+        </configuration>
+      </plugin>
+      <!-- Плагин отвечает за запуск тестов и сбор информации о состоянии тестов которые были запущенны -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven-surefire-plugin}</version>
+        <configuration>
+          <testFailureIgnore>true</testFailureIgnore>
+          <!-- <includes>**/*Test.java</includes>-->
+          <argLine>
+            -Xmx1024m
+            -Dfile.encoding=${encoding.type}
+            -javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar
+          </argLine>
+        <properties>
+            <property>
+                <name>listener</name>
+          <value>io.gameta.allure.junit5.AllureJunit5</value>
+            </property>
+        </properties>
+
+          <systemPropertyVariables>
+            <!--  путь, где сохранить отчет результатов -->
+            <allure.results.directory>${project.build.directory}/allure-results
+            </allure.results.directory>
+          </systemPropertyVariables>
+        </configuration>
+        <dependencies>
+
+          <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectj.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+
+
+      <plugin>
+        <groupId>io.qameta.allure</groupId>
+        <artifactId>allure-maven</artifactId>
+        <version>${allure-maven}</version>
+        <configuration>
+          <reportVersion>2.10.0</reportVersion>
+          <resultsDirectory>${project.build.directory}/allure-results</resultsDirectory>
+          <reportDirectory>${project.build.directory}/allure-reports</reportDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <id>allure-report</id>
+            <phase>install</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
